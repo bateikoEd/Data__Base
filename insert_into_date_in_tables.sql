@@ -1,4 +1,4 @@
-INSERT INTO Ranges (title)
+INSERT INTO ranges (title)
 	VALUES ('начальник'), 
 			('заступник начальника'),
             ('водій локомотива'), 
@@ -11,8 +11,8 @@ INSERT INTO Ranges (title)
             ('працівник довідкової служби'),
             ('фахівець з пошуку персоналу'),
             ('технік-ремонтник');
-    
-INSERT INTO Departments (title)
+            
+INSERT INTO departments (title)
 	VALUES ('Департамент адміністративного забезпечення'), 
 			('Департамент безпеки руху'),
             ('Департамент управління рухом'),
@@ -57,11 +57,11 @@ INSERT INTO Departments (title)
             ('Департамент інвестиційної політики'),
             ('Довідкова інформація');
 
-INSERT INTO Delays (title)
+INSERT INTO delays (title)
 	VALUES ('запізнення потяга'),
 			('погодні умови'),
 			('технічні неполадки');
-INSERT INTO Station (title)
+INSERT INTO stations (title)
 	VALUES ('Івангород'),
 			('Іване-Пусте'),
 			('Іваничі'),
@@ -165,3 +165,27 @@ INSERT INTO Station (title)
             ('Ганнівка'),
             ('Ганнівка'),
             ('Ганнусине');
+
+INSERT INTO routs (start_station_id,end_station_id)
+	VALUES (1,100),
+			(2,99),
+            (3,98),
+            (4,97),
+            (5,96),
+            (6,95),
+            (7,94),
+            (8,93),
+            (9,92),
+            (10,91),
+            (11,90),
+            (12,89),
+            (13,88),
+            (14,87),
+            (15,86),
+            (16,85),
+            (17,84),
+            (18,83),
+            (19,82),
+            (20,81),
+            (21,80),
+            (22,79);
