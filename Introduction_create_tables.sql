@@ -6,7 +6,6 @@ ALTER DATABASE ukr_zaliznitca CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 # DROP TABLE Employees;
 # DROP TABLE Locomotives;
-
 # DROP TABLE Ranges;
 # DROP TABLE Departments;
 
@@ -23,7 +22,6 @@ CREATE TABLE Routs (id INT AUTO_INCREMENT PRIMARY KEY,
         end_station_id INT NOT NULL);
 CREATE TABLE Ticket_statuses(id INT AUTO_INCREMENT PRIMARY KEY,
 		title CHAR(255) NOT NULL);
-
 CREATE TABLE Employees (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, 
 		full_name CHAR(255) NOT NULL, 
         rang_id INT NOT NULL,
@@ -36,7 +34,6 @@ CREATE TABLE Employees (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
         age INT NOT NULL,
         FOREIGN KEY (rang_id) REFERENCES Ranges(id),
         FOREIGN KEY (department_id)  REFERENCES Departments(id));
-        
 CREATE TABLE Locomotives (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL , 
 		count_of_completed_routes INT NOT NULL, 
         main_station_id INT NOT NULL,
@@ -54,7 +51,6 @@ CREATE TABLE Locomotives (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
         FOREIGN KEY (current_station_id) REFERENCES Stations(id),
         FOREIGN KEY (locomotive_team_department_id) REFERENCES Departments(id),
         FOREIGN KEY (tech_team_department_id) REFERENCES Departments(id));
-
 CREATE TABLE Journeys (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
 		rout_id INT NOT NULL,
         canceled BOOL NOT NULL,
@@ -66,7 +62,6 @@ CREATE TABLE Journeys (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
         international_or_internal BOOL NOT NULL,
         FOREIGN KEY (rout_id) REFERENCES Routs(id),
         FOREIGN KEY (delay_id) REFERENCES Delays(id));
-        
 CREATE TABLE Tickets (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
 	journey_id INT NOT NULL,
     full_name CHAR(255) NOT NULL,
@@ -80,7 +75,6 @@ CREATE TABLE Tickets (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
     age INT NOT NULL,
     FOREIGN KEY (journey_id) REFERENCES Journeys(id),
     FOREIGN KEY (ticket_status_id) REFERENCES Ticket_statuses(id));
-        
 CREATE TABLE Preparation_for_the_journey (journey_id INT NOT NULL,
 		technical_inspection BOOL NOT NULL,
         minor_repairs BOOL NOT NULL,
@@ -88,62 +82,4 @@ CREATE TABLE Preparation_for_the_journey (journey_id INT NOT NULL,
         replenishment BOOL NOT NULL,
         FOREIGN KEY (journey_id) REFERENCES Journeys(id));
 
-INSERT INTO Ranges (title)
-	VALUES ('начальник'), 
-			('заступник начальника'),
-            ('водій локомотива'), 
-            ('водій рухомого складу'),
-            ('диспетчер'),
-            ('ремонтник технічного складу'),
-            ('ремонтник шляхів'),
-            ('касир'),
-            ('працівник служби підготовки складів'),
-            ('працівник довідкової служби'),
-            ('фахівець з пошуку персоналу'),
-            ('технік-ремонтник');
-    
-INSERT INTO Departments (title)
-	VALUES ('Департамент адміністративного забезпечення'), 
-			('Департамент безпеки руху'),
-            ('Департамент управління рухом'),
-            ('Департамент майнової політики'),
-            ('Департамент колії та споруд'),
-            ('Департамент вагонного господарства'),
-            ('Департамент комерційної роботи'),
-            ('Департамент приміських пасажирських перевезень'),
-            ('Управління статистики'),
-            ('Департамент автоматики та телекомунікацій'),
-            ('Департамент електрифікації та електропостачання'),
-            ('Департамент оплати праці та мотивації персоналу'),
-            ('Департамент розвитку і технічної політики'),
-            ('Департамент бухгалтерського, податкового обліку, звітності та методології'),
-            ('Юридичний департамент'),
-            ('Головне управління воєнізованої охорони'),
-            ('Департамент матеріально-технічного забезпечення'),
-            ('Перше управління'),
-            ('Спеціальне управління'),
-            ('Департамент міжнародного співробітництва'),
-            ('Департамент капітальних вкладень'),
-            ('Департамент внутрішнього аудиту та контролю'),
-            ('Департамент будівель та споруд'),
-            ('Департамент реформування та корпоративного розвитку'),
-            ('Департамент інформаційної політики та зв’язків з громадськістю'),
-            ('Департамент охорони праці та промислової безпеки'),
-            ('Департамент корпоративної соціальної відповідальності (ЦКСВ)'),
-            ('Департамент менеджменту якості продукції та послуг'),
-            ('Департамент безпеки'),
-            ('Департамент енергоменеджменту'),
-            ('Департамент казначейства'),
-            ('Департамент економіки, планування та бюджетування'),
-            ('Департамент цінової політики'),
-            ('Департамент організаційного розвитку'),
-            ('Департамент оперативного моніторингу'),
-            ('Департамент маркетингу і реклами'),
-            ('Департамент корпоративного управління'),
-            ('Департамент розвитку персоналу та кадрової політики'),
-            ('Управління соціальної політики'),
-            ('Департамент стратегічного розвитку та планування'),
-            ('Управління екологічного менеджменту'),
-            ('Департамент інвестиційної політики'),
-            ('Довідкова інформація');
     
