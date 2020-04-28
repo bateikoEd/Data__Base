@@ -1,3 +1,13 @@
+SELECT * FROM ranges;
+SELECT * FROM departments;
+SELECT * FROM stations;
+SELECT * FROM delays;
+SELECT * FROM routs;
+SELECT * FROM employees;
+SELECT * FROM locomotives;
+SELECT * FROM journeys;
+SELECT * FROM preparation_for_the_journey;
+
 INSERT INTO ranges (title)
 	VALUES ('начальник'), 
 			('заступник начальника'),
@@ -189,3 +199,32 @@ INSERT INTO routs (start_station_id,end_station_id)
             (20,81),
             (21,80),
             (22,79);
+            
+INSERT INTO employees (full_name,rang_id,department_id,team_id,count_of_children,sex,salary,overview,age)
+	VALUES ('Корнієнко Олександр Сергійович', 1, 1, 0, 2, 'Чоловік',20000,TRUE,35),
+			('Разумков Дмитро Олександрович', 2, 1, 1, 2, 'Чоловік',2000,TRUE,40),
+            ('Стефанчук Руслан Олексійович', 3, 1,1, 10, 'Не визначився',13000,TRUE,25),
+            ('Арахамія Давид Георгійович', 4, 1,2, 4, 'Чоловік',2000,TRUE,35),
+            ('Янченко Галина Ігорівна', 5, 1,2, 5, 'Жінка',2000,TRUE,20),
+            
+            ('Радіна Анастасія Олегівна', 1, 2,0, 2, 'Жінка',30000,TRUE,30),
+            ('Ткаченко Олександр Владиславович', 2, 2,1, 3, 'Чоловік',2000,FALSE,25),
+            ('Беленюк Жан Венсанович', 3, 2,1, 0, 'Чоловік',2000,TRUE,20),
+            ('Бабак Сергій Віталійович', 4, 2,2, 0, 'Чоловік',2000,FALSE,30),
+            ('Шуляк Олена Олексіївна', 5, 2,3, 2, 'Жінка',20000,TRUE,30);
+
+INSERT INTO locomotives (count_of_completed_routes,main_station_id,current_station_id,arival_time,
+		last_techical_overview,last_repair,repairs_count,locomotiv_age,locomotive_team_department_id,
+        locomotive_team_id,tech_team_department_id,tech_team_id)
+	VALUES (355,1,1,'2020-05-02 13:45:33', '2019-12-30', '2019-10-30',60, 40, 1,1,2,1),
+			(200,2,1,'2020-06-02 10:40:33', '2020-4-30', '2019-10-30',10, 20, 1,1,2,1),
+            (100,3,2,'2020-03-13 11:45:30', '2020-01-25', '2019-10-30',5, 10, 1,1,2,1),
+            
+            (50,4,3,'2020-05-02 10:45:33', '2019-12-30', '2019-10-30',1, 5, 2,2,1,2),
+            (1000,1,1,'2020-04-03 13:45:33', '2019-12-30', '2019-10-30',40, 60, 2,2,1,2);
+
+
+    
+    
+    
+    
