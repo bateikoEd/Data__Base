@@ -4,11 +4,6 @@ USE ukr_zaliznitca;
 
 ALTER DATABASE ukr_zaliznitca CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
-# DROP TABLE Employees;
-# DROP TABLE Locomotives;
-# DROP TABLE Ranges;
-# DROP TABLE Departments;
-
 CREATE TABLE ranges (id INT AUTO_INCREMENT PRIMARY KEY,
 		title CHAR(255) NOT NULL);
 CREATE TABLE departments (id INT AUTO_INCREMENT PRIMARY KEY,
@@ -72,7 +67,7 @@ CREATE TABLE tickets (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
 		sex ENUM('Чоловік', 'Жінка', 'Не визначився', 'інше') NOT NULL,
 		age INT NOT NULL,
 		FOREIGN KEY (journey_id) REFERENCES journeys(id));
-CREATE TABLE preparation_for_the_journey (journey_id INT NOT NULL,
+CREATE TABLE preparation_for_the_journey ( journey_id INT NOT NULL PRIMARY KEY,
 		technical_inspection BOOL NOT NULL,
         minor_repairs BOOL NOT NULL,
         cleaning_of_cars BOOL NOT NULL,

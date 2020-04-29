@@ -243,5 +243,13 @@ INSERT INTO tickets (journey_id,full_name,ticket_status,buying_time,return_time,
 			(1,'Герус Андрій Михайлович', 'куплено','2020-03-14 12:45:30',NULL,500,1,6,'Чоловік',30),
             (6,'Бойко Юрій Володимирович', 'повернено','2020-03-01 12:45:30','2020-03-10 15:45:30',500,1,1,'Не визначився',50),
 			(1,'Монастирський Денис Анатолійович', 'куплено','2020-03-10 12:45:30',NULL,500,1,7,'Чоловік',45);
-    
+
+INSERT INTO preparation_for_the_journey (journey_id,technical_inspection,minor_repairs,cleaning_of_cars,replenishment)
+	VALUES (1,1,1,1,1),
+			(2,1,1,1,1),
+            (3,1,1,0,1),
+            (4,1,0,1,1),
+            (5,1,1,0,1),
+            (6,1,0,1,1),
+            (7,1,1,0,1);
     
