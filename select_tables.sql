@@ -13,7 +13,6 @@ SELECT  employees.id AS 'ідентифікаційний код',
 FROM employees
 LEFT JOIN ranges ON employees.rang_id = ranges.id
 LEFT JOIN departments ON employees.rang_id = departments.id;
-# IF employees.overview = 0  employees.overview AS 'no' ELSE employees.overview AS 'YES';
 
 # начальник
 SELECT  employees.id AS 'ідентифікаційний код', 
