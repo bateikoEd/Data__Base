@@ -25,6 +25,7 @@ CREATE TABLE employees (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
         salary INT NOT NULL, 
         overview BOOL NOT NULL, 
         age INT NOT NULL,
+        experiance INT NOT NULL,
         FOREIGN KEY (rang_id) REFERENCES ranges(id),
         FOREIGN KEY (department_id)  REFERENCES departments(id));
 CREATE TABLE locomotives (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL , 

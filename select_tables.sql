@@ -7,12 +7,12 @@ SELECT  employees.id AS 'ідентифікаційний код',
 		employees.count_of_children AS 'К-сть дітей',
         employees.sex AS 'Стать', 
         employees.salary AS 'Зарплата', 
-        employees.overview AS 'Пройдений медогляд', 
+        IF (employees.overview, 'Так','Ні') AS 'Пройдений медогляд', 
         employees.age AS 'Вік',
-        IF (employees.overview, 'Так','Ні')
+        employees.experiance AS 'Стаж'
 FROM employees
 LEFT JOIN ranges ON employees.rang_id = ranges.id
-LEFT JOIN departments ON employees.rang_id = departments.id;
+LEFT JOIN departments ON employees.department_id = departments.id;
 
 # начальник
 SELECT  employees.id AS 'ідентифікаційний код', 
@@ -27,7 +27,7 @@ SELECT  employees.id AS 'ідентифікаційний код',
         employees.age AS 'Вік'
 		FROM employees
 LEFT JOIN ranges ON employees.rang_id = ranges.id
-LEFT JOIN departments ON employees.rang_id = departments.id
+LEFT JOIN departments ON employees.department_id = departments.id
 WHERE employees.rang_id = 1;
 
 # count of начальник
