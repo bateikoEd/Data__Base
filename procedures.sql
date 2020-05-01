@@ -5,7 +5,7 @@ DROP PROCEDURE IF EXISTS employees_age_and_count;
 DROP PROCEDURE IF EXISTS employees_child_and_count;
 DROP PROCEDURE IF EXISTS employees_sex_and_count;
 DROP PROCEDURE IF EXISTS employees_experiance_and_count;
-DROP PROCEDURE IF EXISTS name_proc;
+DROP PROCEDURE IF EXISTS employees_all_team_and_count;
 DROP PROCEDURE IF EXISTS name_proc;
 DROP PROCEDURE IF EXISTS name_proc;
 DROP PROCEDURE IF EXISTS name_proc;
@@ -225,3 +225,57 @@ END //
 DELIMITER ;
 
 # CALL employees_salary_and_count(100,30000,@count_employees_salary);
+
+DELIMITER // 
+CREATE PROCEDURE employees_all_team_and_count(OUT count_employees INT)
+BEGIN
+	SELECT  employees.id AS 'ідентифікаційний код', 
+			employees.full_name AS 'ПІБ', 
+			ranges.title AS 'Посада', 
+			departments.title AS 'Департамент', 
+			employees.team_id AS 'Номер бригади',
+			employees.count_of_children AS 'К-сть дітей',
+			employees.sex AS 'Стать', 
+			employees.salary AS 'Зарплата', 
+			IF (employees.overview, 'Так','Ні') AS 'Пройдений медогляд', 
+        employees.age AS 'Вік',
+        employees.experiance AS 'Стаж'
+	FROM employees
+	LEFT JOIN ranges ON employees.rang_id = ranges.id
+	LEFT JOIN departments ON employees.department_id = departments.id
+	WHERE employees.rang_id > 1;
+    
+    SELECT COUNT(*) INTO count_employees FROM employees
+    WHERE employees.rang_id > 1;
+    SELECT count_employees;
+END //
+DELIMITER ;
+
+# CALL employees_all_team_and_count(@count_employees_all_team);
+
+DELIMITER // 
+CREATE PROCEDURE employees_team_in_department_and_count(IN department_id INT, IN team_id INT, OUT count_employees INT)
+BEGIN
+	SELECT  employees.id AS 'ідентифікаційний код', 
+			employees.full_name AS 'ПІБ', 
+			ranges.title AS 'Посада', 
+			departments.title AS 'Департамент', 
+			employees.team_id AS 'Номер бригади',
+			employees.count_of_children AS 'К-сть дітей',
+			employees.sex AS 'Стать', 
+			employees.salary AS 'Зарплата', 
+			IF (employees.overview, 'Так','Ні') AS 'Пройдений медогляд', 
+        employees.age AS 'Вік',
+        employees.experiance AS 'Стаж'
+	FROM employees
+	LEFT JOIN ranges ON employees.rang_id = ranges.id
+	LEFT JOIN departments ON employees.department_id = departments.id
+	WHERE employees.department_id = department_id and employees.team_id = team_id;
+    
+    SELECT COUNT(*) INTO count_employees FROM employees
+    WHERE employees.rang_id > 1;
+    SELECT count_employees;
+END //
+DELIMITER ;
+
+# CALL employees_all_team_and_count(@count_employees_all_team);
