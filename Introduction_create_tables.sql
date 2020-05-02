@@ -57,14 +57,14 @@ CREATE TABLE journeys (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
         FOREIGN KEY (rout_id) REFERENCES routs(id),
         FOREIGN KEY (delay_id) REFERENCES delays(id));
 CREATE TABLE tickets (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
-		journey_id INT NOT NULL,
 		full_name CHAR(255) NOT NULL,
+        journey_id INT NOT NULL,
+        carload_id INT NOT NULL,
+		seat_number INT NOT NULL,
 		ticket_status ENUM('заброньовано', 'куплено', 'повернено') NOT NULL,
 		buying_time DATETIME,
 		return_time DATETIME,
 		price INT NOT NULL,
-		carload_id INT NOT NULL,
-		seat_number INT NOT NULL,
 		sex ENUM('Чоловік', 'Жінка', 'Не визначився', 'інше') NOT NULL,
 		age INT NOT NULL,
 		FOREIGN KEY (journey_id) REFERENCES journeys(id));
@@ -74,5 +74,3 @@ CREATE TABLE preparation_for_the_journey ( journey_id INT NOT NULL PRIMARY KEY,
         cleaning_of_cars BOOL NOT NULL,
         replenishment BOOL NOT NULL,
         FOREIGN KEY (journey_id) REFERENCES journeys(id));
-
-    

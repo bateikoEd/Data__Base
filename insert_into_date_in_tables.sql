@@ -7,6 +7,8 @@ SELECT * FROM employees;
 SELECT * FROM locomotives;
 SELECT * FROM journeys;
 SELECT * FROM preparation_for_the_journey;
+SELECT * FROM tickets;
+
 
 INSERT INTO ranges (title)
 	VALUES ('начальник'), 

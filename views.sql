@@ -1,12 +1,14 @@
-DROP VIEW employees_view;
-DROP VIEW locomotives_view;
-DROP VIEW journeys_view;
-DROP VIEW VIEW_NAME;
-DROP VIEW VIEW_NAME;
-DROP VIEW VIEW_NAME;
-DROP VIEW VIEW_NAME;
-DROP VIEW VIEW_NAME;
-DROP VIEW VIEW_NAME;
+DROP VIEW IF EXISTS employees_view;
+DROP VIEW IF EXISTS locomotives_view;
+DROP VIEW IF EXISTS journeys_view;
+DROP VIEW IF EXISTS tickets_view;
+DROP VIEW IF EXISTS VIEW_NAME;
+DROP VIEW IF EXISTS VIEW_NAME;
+DROP VIEW IF EXISTS VIEW_NAME;
+DROP VIEW IF EXISTS VIEW_NAME;
+DROP VIEW IF EXISTS VIEW_NAME;
+DROP VIEW IF EXISTS VIEW_NAME;
+
 
 CREATE 
 VIEW employees_view AS
@@ -60,5 +62,25 @@ SELECT routs.id AS 'Номер рейсу',
 FROM journeys 
 LEFT JOIN delays ON journeys.delay_id = delays.id
 LEFT JOIN routs ON journeys.rout_id = routs.id
+LEFT JOIN stations ON routs.start_station_id = stations.id
+LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id;
+
+CREATE VIEW tickets_view AS
+SELECT tickets.id,
+		tickets.full_name AS 'ПІБ',
+		journeys.id AS 'Номер рейсу',
+        tickets.carload_id AS 'Номер вагону',
+		tickets.seat_number AS 'Номер місця',
+		tickets.price AS 'Ціна',
+		stations.title AS 'Початкова станція',
+        stations2.title AS 'Кінцева станція',
+		tickets.ticket_status AS 'Статус квитка',
+		IF (tickets.buying_time IS NOT NULL,tickets.buying_time, '-') AS 'Час купівлі',
+		IF (tickets.return_time IS NOT NULL,tickets.return_time, '-') AS 'Час повернення',
+		tickets.sex AS 'Стать',
+		tickets.age AS 'Вік'
+FROM tickets
+LEFT JOIN journeys ON journeys.rout_id = tickets.journey_id
+LEFT JOIN routs ON tickets.journey_id = routs.id
 LEFT JOIN stations ON routs.start_station_id = stations.id
 LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id;
