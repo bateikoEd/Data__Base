@@ -15,6 +15,24 @@ FROM employees
 LEFT JOIN ranges ON employees.rang_id = ranges.id
 LEFT JOIN departments ON employees.department_id = departments.id;
 
-
+CREATE VIEW locomotives_view AS
+SELECT locomotives.id AS 'Реєстраційний номер',
+		locomotives.count_of_completed_routes AS 'К-сть завершених поїздок',
+        stations.title AS 'Головна станція',
+        stations2.title AS 'Поточна станція',
+        locomotives.arival_time AS 'Час прибуття',
+        locomotives.last_techical_overview AS 'Останній тех огляд',
+        locomotives.last_repair AS 'Останній ремонт',
+        locomotives.repairs_count AS 'К-сть ремонтів',
+        locomotives.locomotiv_age AS 'Вік локомотиву',
+        departments.title AS 'Департамент бригади локомотива',
+        locomotives.locomotive_team_id AS 'Номер бригади локомотива',
+        departments2.title AS 'Департамент тех бригади',
+        locomotives.tech_team_id AS 'Номер тех бригади'
+FROM locomotives
+LEFT JOIN stations ON locomotives.main_station_id = stations.id
+LEFT JOIN stations stations2 ON locomotives.current_station_id = stations2.id
+LEFT JOIN departments ON locomotives.locomotive_team_department_id = departments.id
+LEFT JOIN departments departments2 ON locomotives.tech_team_department_id = departments2.id;
  
  
