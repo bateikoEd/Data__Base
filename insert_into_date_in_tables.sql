@@ -227,13 +227,14 @@ INSERT INTO locomotives (count_of_completed_routes,main_station_id,current_stati
             (1000,1,1,'2020-04-03 13:45:33', '2019-12-30', '2019-10-30',40, 60, 2,2,1,2);
 
 INSERT INTO journeys (rout_id,canceled,delay_id,beginning_delay,end_delay,
-					departure_time,arrival_time,international_or_internal)
-	VALUES (1,0,1,NULL,NULL,'2020-03-13 11:45:30','2020-03-14 13:45:33',1),
-			(2,0,1,NULL,NULL,'2020-04-12 11:45:30','2020-04-14 13:45:33',1),
-            (3,1,1,NULL,NULL,'2020-03-13 11:45:30','2020-03-14 13:45:33',1),
-            (4,0,1,NULL,NULL,'2020-05-13 11:45:30','2020-05-14 13:45:33',0),
-            (5,0,1,NULL,NULL,'2020-03-10 11:45:30','2020-03-15 13:45:33',0),
-			(6,0,1,'2020-03-10 12:45:30','2020-03-10 18:59:30','2020-03-09 11:45:30','2020-03-15 13:45:33',0);
+					departure_time,arrival_time,price_ticket,international_or_internal)
+	VALUES (1,0,1,NULL,NULL,'2020-03-13 11:45:30','2020-03-14 13:45:33',500,1),
+			(2,0,1,NULL,NULL,'2020-04-12 11:45:30','2020-04-14 13:45:33',500,1),
+            (3,1,1,NULL,NULL,'2020-03-13 11:45:30','2020-03-14 13:45:33',300,1),
+            (4,0,1,NULL,NULL,'2020-05-13 11:45:30','2020-05-14 13:45:33',530,0),
+            (5,0,1,NULL,NULL,'2020-03-10 11:45:30','2020-03-15 13:45:33',500,0),
+			(6,0,1,'2020-03-10 12:45:30','2020-03-10 18:59:30','2020-03-09 11:45:30','2020-03-15 13:45:33',200,0),
+            (5,0,1,NULL,NULL,'2020-02-10 11:45:30','2020-02-15 13:45:33',1000,0);
 
 INSERT INTO tickets (journey_id,full_name,ticket_status,buying_time,return_time,price,
 					carload_id,seat_number,sex,age)

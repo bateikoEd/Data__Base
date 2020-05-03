@@ -2,13 +2,12 @@ DROP VIEW IF EXISTS employees_view;
 DROP VIEW IF EXISTS locomotives_view;
 DROP VIEW IF EXISTS journeys_view;
 DROP VIEW IF EXISTS tickets_view;
+DROP VIEW IF EXISTS routs_view;
 DROP VIEW IF EXISTS VIEW_NAME;
 DROP VIEW IF EXISTS VIEW_NAME;
 DROP VIEW IF EXISTS VIEW_NAME;
 DROP VIEW IF EXISTS VIEW_NAME;
 DROP VIEW IF EXISTS VIEW_NAME;
-DROP VIEW IF EXISTS VIEW_NAME;
-
 
 CREATE 
 VIEW employees_view AS
@@ -54,10 +53,11 @@ SELECT routs.id AS 'Номер рейсу',
         stations2.title AS 'Кінцева станція',
 		IF (journeys.canceled,'Так','Ні') AS 'Чи відмінений',
         delays.title AS 'Причина затримки',
-        journeys.beginning_delay AS 'Початок затримки',
-        journeys.end_delay AS 'Кінець затримки',
+        IF (journeys.beginning_delay IS NOT NULL,journeys.beginning_delay,'-') AS 'Початок затримки',
+        IF (journeys.end_delay IS NOT NULL, journeys.end_delay,'-') AS 'Кінець затримки',
         journeys.departure_time AS 'Час відправлення',
         journeys.arrival_time AS 'Час прибуття',
+        journeys.price_ticket AS 'Ціна за квиток',
         IF (journeys.international_or_internal, 'Внутрішній','Міжнародний') AS 'Тип рейсу'
 FROM journeys 
 LEFT JOIN delays ON journeys.delay_id = delays.id
@@ -82,5 +82,13 @@ SELECT tickets.id,
 FROM tickets
 LEFT JOIN journeys ON journeys.rout_id = tickets.journey_id
 LEFT JOIN routs ON tickets.journey_id = routs.id
+LEFT JOIN stations ON routs.start_station_id = stations.id
+LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id;
+
+CREATE 
+VIEW routs_view AS
+SELECT stations.title AS 'Початкова станція',
+        stations2.title AS 'кінцева станція' 
+FROM routs
 LEFT JOIN stations ON routs.start_station_id = stations.id
 LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id;

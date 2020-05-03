@@ -53,6 +53,7 @@ CREATE TABLE journeys (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
         end_delay DATETIME,
         departure_time DATETIME NOT NULL,
 		arrival_time DATETIME NOT NULL,
+        price_ticket INT NOT NULL,
         international_or_internal BOOL NOT NULL,
         FOREIGN KEY (rout_id) REFERENCES routs(id),
         FOREIGN KEY (delay_id) REFERENCES delays(id));

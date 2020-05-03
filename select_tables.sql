@@ -2,7 +2,7 @@ SELECT * FROM employees_view;
 SELECT * FROM locomotives_view;
 SELECT * FROM journeys_view;
 SELECT * FROM tickets_view;
-SELECT * FROM TABLE_NAME_VIEW;
+SELECT * FROM routs_view;
 SELECT * FROM TABLE_NAME_VIEW;
 SELECT * FROM TABLE_NAME_VIEW;
 SELECT * FROM TABLE_NAME_VIEW;
