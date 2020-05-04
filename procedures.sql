@@ -32,7 +32,7 @@ DROP PROCEDURE IF EXISTS employees_rang_overview_count;
 DROP PROCEDURE IF EXISTS journeys_count_of_cancelled_end_station;
 DROP PROCEDURE IF EXISTS journeys_delays_count;
 DROP PROCEDURE IF EXISTS journeys_couse_delay_and_rout_count;
-DROP PROCEDURE IF EXISTS name_proc;
+DROP PROCEDURE IF EXISTS tickets_couse_delay_rout_and_return_tickets_on_journey_count;
 DROP PROCEDURE IF EXISTS name_proc;
 DROP PROCEDURE IF EXISTS name_proc;
 DROP PROCEDURE IF EXISTS name_proc;
@@ -931,20 +931,20 @@ BEGIN
 	LEFT JOIN stations ON routs.start_station_id = stations.id
 	LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
     WHERE journeys.canceled = 1 AND routs.end_station_id = end_station_id1;
-    
-    -- DECLARE title_end varchar(255);
---  	SET title_end = stations.title
---  	WHERE stations.id = end_station_id1;
---      
---     SELECT stations.title INTO title_end
--- 	WHERE stations.id = end_station_id1;
-     
-    SELECT COUNT('Кінцева станція') INTO count_routs 
-	FROM journeys_view
-	WHERE 'Чи відмінений' = 'Так'; 
-   --  AND journeys_view.'Кінцева станція' = title_end;
+
+    SELECT COUNT(*) INTO count_routs 
+	FROM ( SELECT routs.id AS rout_id,
+				stations.id AS stat_start,
+				stations2.id AS stat_end, 
+				journeys.canceled AS j_canc
+			FROM journeys 
+            LEFT JOIN routs ON journeys.rout_id = routs.id
+            LEFT JOIN stations ON routs.start_station_id = stations.id
+			LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id) AS a
+	WHERE a.j_canc = 1 
+    AND a.stat_end = end_station_id1;
 --     
---     SELECT count_routs;
+	SELECT count_routs;
 END //
 DELIMITER ;
 
@@ -979,7 +979,7 @@ BEGIN
 END //
 DELIMITER ;
 
- CALL journeys_couse_delay_count(2,@count_delays);
+# CALL journeys_couse_delay_count(2,@count_delays);
  
 DELIMITER //
 CREATE PROCEDURE journeys_couse_delay_and_rout_count (IN couse_delay INT, IN rout_id INT, OUT count_routs INT)
@@ -1002,13 +1002,93 @@ BEGIN
 	LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
     WHERE journeys.delay_id = couse_delay AND journeys.rout_id = rout_id;
     
-    
     SELECT COUNT(*) INTO count_routs FROM journeys
-    WHERE journeys.delay_id = couse_delay AND journeys.rout_id = rout_id;
+    WHERE tickets.delay_id = couse_delay AND journeys.rout_id = rout_id;
     
     SELECT count_routs;
 END //
 DELIMITER ;
 
- # CALL journeys_couse_delay_and_rout_count(2,6,@count_delays);
+# CALL journeys_couse_delay_and_rout_count(2,6,@count_delays);
  
+DELIMITER //
+CREATE PROCEDURE tickets_couse_delay_rout_and_return_tickets_on_journey_count (IN rout_id INT, OUT count_tickets INT)
+BEGIN 
+	SELECT tickets.id,
+			tickets.full_name AS 'ПІБ',
+			journeys.id AS 'Номер рейсу',
+			tickets.carload_id AS 'Номер вагону',
+			tickets.seat_number AS 'Номер місця',
+			tickets.price AS 'Ціна',
+			stations.title AS 'Початкова станція',
+			stations2.title AS 'Кінцева станція',
+			tickets.ticket_status AS 'Статус квитка',
+			IF (tickets.buying_time IS NOT NULL,tickets.buying_time, '-') AS 'Час купівлі',
+			IF (tickets.return_time IS NOT NULL,tickets.return_time, '-') AS 'Час повернення',
+			tickets.sex AS 'Стать',
+			tickets.age AS 'Вік'
+	FROM tickets
+	LEFT JOIN journeys ON journeys.rout_id = tickets.journey_id
+	LEFT JOIN routs ON tickets.journey_id = routs.id
+	LEFT JOIN stations ON routs.start_station_id = stations.id
+	LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
+    WHERE journeys.rout_id = rout_id AND 
+    (tickets.return_time BETWEEN journeys.beginning_delay AND journeys.end_delay);
+    
+    SELECT COUNT(*) INTO count_tickets FROM 
+    (SELECT journeys.rout_id AS rout, 
+		tickets.return_time AS ret_time, 
+        journeys.beginning_delay AS beg_del, 
+        journeys.end_delay AS end_del
+		FROM tickets
+		LEFT JOIN journeys ON journeys.rout_id = tickets.journey_id
+		WHERE journeys.rout_id = rout_id ) AS a
+    WHERE a.rout = rout_id AND 
+    a.ret_time BETWEEN a.beg_del AND a.end_del;
+    
+    SELECT count_tickets;
+END //
+DELIMITER ;
+
+# CALL tickets_couse_delay_rout_and_return_tickets_on_journey_count(6,@count_delays);
+ 
+ DELIMITER //
+CREATE PROCEDURE tickets_average_selled_in_period_of_time_on_some_rout (IN rout_id INT, OUT count_tickets INT)
+BEGIN 
+	SELECT tickets.id,
+			tickets.full_name AS 'ПІБ',
+			journeys.id AS 'Номер рейсу',
+			tickets.carload_id AS 'Номер вагону',
+			tickets.seat_number AS 'Номер місця',
+			tickets.price AS 'Ціна',
+			stations.title AS 'Початкова станція',
+			stations2.title AS 'Кінцева станція',
+			tickets.ticket_status AS 'Статус квитка',
+			IF (tickets.buying_time IS NOT NULL,tickets.buying_time, '-') AS 'Час купівлі',
+			IF (tickets.return_time IS NOT NULL,tickets.return_time, '-') AS 'Час повернення',
+			tickets.sex AS 'Стать',
+			tickets.age AS 'Вік'
+	FROM tickets
+	LEFT JOIN journeys ON journeys.rout_id = tickets.journey_id
+	LEFT JOIN routs ON tickets.journey_id = routs.id
+	LEFT JOIN stations ON routs.start_station_id = stations.id
+	LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
+    WHERE journeys.rout_id = rout_id AND 
+    (tickets.return_time BETWEEN journeys.beginning_delay AND journeys.end_delay);
+    
+    SELECT COUNT(*) INTO count_tickets FROM 
+    (SELECT journeys.rout_id AS rout, 
+		tickets.return_time AS ret_time, 
+        journeys.beginning_delay AS beg_del, 
+        journeys.end_delay AS end_del
+		FROM tickets
+		LEFT JOIN journeys ON journeys.rout_id = tickets.journey_id
+		WHERE journeys.rout_id = rout_id ) AS a
+    WHERE a.rout = rout_id AND 
+    a.ret_time BETWEEN a.beg_del AND a.end_del;
+    
+    SELECT count_tickets;
+END //
+DELIMITER ;
+
+# CALL tickets_couse_delay_rout_and_return_tickets_on_journey_count(6,@count_delays);
