@@ -12,9 +12,14 @@ CREATE TABLE stations (id INT AUTO_INCREMENT PRIMARY KEY,
 		title CHAR(255) NOT NULL);
 CREATE TABLE delays (id INT AUTO_INCREMENT PRIMARY KEY,
 		title CHAR(255) NOT NULL);
+CREATE TABLE types_journey (id INT AUTO_INCREMENT PRIMARY KEY,
+		title CHAR(255) NOT NULL);
+CREATE TABLE types_train (id INT AUTO_INCREMENT PRIMARY KEY,
+		title CHAR(255) NOT NULL);
 CREATE TABLE routs (id INT AUTO_INCREMENT PRIMARY KEY,
 		start_station_id INT NOT NULL,
         end_station_id INT NOT NULL);
+        
 CREATE TABLE employees (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, 
 		full_name CHAR(255) NOT NULL, 
         rang_id INT NOT NULL,
@@ -28,6 +33,7 @@ CREATE TABLE employees (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
         experiance INT NOT NULL,
         FOREIGN KEY (rang_id) REFERENCES ranges(id),
         FOREIGN KEY (department_id)  REFERENCES departments(id));
+        
 CREATE TABLE locomotives (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL , 
 		count_of_completed_routes INT NOT NULL, 
         main_station_id INT NOT NULL,
@@ -45,6 +51,7 @@ CREATE TABLE locomotives (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
         FOREIGN KEY (current_station_id) REFERENCES stations(id),
         FOREIGN KEY (locomotive_team_department_id) REFERENCES departments(id),
         FOREIGN KEY (tech_team_department_id) REFERENCES departments(id));
+        
 CREATE TABLE journeys (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
 		rout_id INT NOT NULL,
         canceled BOOL NOT NULL,
@@ -54,9 +61,14 @@ CREATE TABLE journeys (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
         departure_time DATETIME NOT NULL,
 		arrival_time DATETIME NOT NULL,
         price_ticket INT NOT NULL,
-        international_or_internal BOOL NOT NULL,
+        type_journey INT NOT NULL,
+        type_train INT NOT NULL,
+        # international_or_internal BOOL NOT NULL,
         FOREIGN KEY (rout_id) REFERENCES routs(id),
-        FOREIGN KEY (delay_id) REFERENCES delays(id));
+        FOREIGN KEY (delay_id) REFERENCES delays(id),
+        FOREIGN KEY (type_journey) REFERENCES types_journey(id),
+        FOREIGN KEY (type_train) REFERENCES types_train(id));
+        
 CREATE TABLE tickets (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
 		full_name CHAR(255) NOT NULL,
         journey_id INT NOT NULL,
@@ -68,7 +80,9 @@ CREATE TABLE tickets (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL ,
 		price INT NOT NULL,
 		sex ENUM('Чоловік', 'Жінка', 'Не визначився', 'інше') NOT NULL,
 		age INT NOT NULL,
+        handed_luggage BOOL NOT NULL,
 		FOREIGN KEY (journey_id) REFERENCES journeys(id));
+        
 CREATE TABLE preparation_for_the_journey ( journey_id INT NOT NULL PRIMARY KEY,
 		technical_inspection BOOL NOT NULL,
         minor_repairs BOOL NOT NULL,

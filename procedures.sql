@@ -36,9 +36,8 @@ DROP PROCEDURE IF EXISTS tickets_couse_delay_rout_and_return_tickets_on_journey_
 DROP PROCEDURE IF EXISTS tickets_average_sold_in_period_of_time_on_some_rout;
 DROP PROCEDURE IF EXISTS tickets_average_sold_in_period_of_hour_on_some;
 DROP PROCEDURE IF EXISTS tickets_average_sold_price_of_ticket_rout;
-DROP PROCEDURE IF EXISTS name_proc;
-DROP PROCEDURE IF EXISTS name_proc;
-DROP PROCEDURE IF EXISTS name_proc;
+DROP PROCEDURE IF EXISTS journeys_couse_delay_count;
+DROP PROCEDURE IF EXISTS tickets_average_sold_in_period_of_hour_on_some_rout;
 DROP PROCEDURE IF EXISTS name_proc;
 DROP PROCEDURE IF EXISTS name_proc;
 DROP PROCEDURE IF EXISTS name_proc;
@@ -720,21 +719,24 @@ DELIMITER //
 CREATE PROCEDURE journeys_count_of_routs (IN rout_id INT, OUT count_routs INT)
 BEGIN 
 	SELECT routs.id AS 'Номер рейсу',
-		stations.title AS 'Початкова станція',
-        stations2.title AS 'Кінцева станція',
-		IF (journeys.canceled,'Так','Ні') AS 'Чи відмінений',
-        delays.title AS 'Причина затримки',
-        IF (journeys.beginning_delay IS NOT NULL,journeys.beginning_delay,'-') AS 'Початок затримки',
-        IF (journeys.end_delay IS NOT NULL, journeys.end_delay,'-') AS 'Кінець затримки',
-        journeys.departure_time AS 'Час відправлення',
-        journeys.arrival_time AS 'Час прибуття',
-        journeys.price_ticket AS 'Ціна за квиток',
-        IF (journeys.international_or_internal, 'Внутрішній','Міжнародний') AS 'Тип рейсу'
+			stations.title AS 'Початкова станція',
+			stations2.title AS 'Кінцева станція',
+			IF (journeys.canceled,'Так','Ні') AS 'Чи відмінений',
+			delays.title AS 'Причина затримки',
+			IF (journeys.beginning_delay IS NOT NULL,journeys.beginning_delay,'-') AS 'Початок затримки',
+			IF (journeys.end_delay IS NOT NULL, journeys.end_delay,'-') AS 'Кінець затримки',
+			journeys.departure_time AS 'Час відправлення',
+			journeys.arrival_time AS 'Час прибуття',
+			journeys.price_ticket AS 'Ціна за квиток',
+			types_journey.title AS 'Тип маршруту',
+			types_train.title AS 'Тип потяга'
 	FROM journeys 
 	LEFT JOIN delays ON journeys.delay_id = delays.id
 	LEFT JOIN routs ON journeys.rout_id = routs.id
 	LEFT JOIN stations ON routs.start_station_id = stations.id
 	LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
+	LEFT JOIN types_journey ON journeys.type_journey = types_journey.id
+	LEFT JOIN types_train ON journeys.type_train = types_train.id
     WHERE journeys.rout_id = rout_id;
     
     
@@ -751,21 +753,24 @@ DELIMITER //
 CREATE PROCEDURE journeys_count_of_time_rout (IN hours INT, OUT count_routs INT)
 BEGIN 
 	SELECT routs.id AS 'Номер рейсу',
-		stations.title AS 'Початкова станція',
-        stations2.title AS 'Кінцева станція',
-		IF (journeys.canceled,'Так','Ні') AS 'Чи відмінений',
-        delays.title AS 'Причина затримки',
-        IF (journeys.beginning_delay IS NOT NULL,journeys.beginning_delay,'-') AS 'Початок затримки',
-        IF (journeys.end_delay IS NOT NULL, journeys.end_delay,'-') AS 'Кінець затримки',
-        journeys.departure_time AS 'Час відправлення',
-        journeys.arrival_time AS 'Час прибуття',
-        journeys.price_ticket AS 'Ціна за квиток',
-        IF (journeys.international_or_internal, 'Внутрішній','Міжнародний') AS 'Тип рейсу'
+			stations.title AS 'Початкова станція',
+			stations2.title AS 'Кінцева станція',
+			IF (journeys.canceled,'Так','Ні') AS 'Чи відмінений',
+			delays.title AS 'Причина затримки',
+			IF (journeys.beginning_delay IS NOT NULL,journeys.beginning_delay,'-') AS 'Початок затримки',
+			IF (journeys.end_delay IS NOT NULL, journeys.end_delay,'-') AS 'Кінець затримки',
+			journeys.departure_time AS 'Час відправлення',
+			journeys.arrival_time AS 'Час прибуття',
+			journeys.price_ticket AS 'Ціна за квиток',
+			types_journey.title AS 'Тип маршруту',
+			types_train.title AS 'Тип потяга'
 	FROM journeys 
 	LEFT JOIN delays ON journeys.delay_id = delays.id
 	LEFT JOIN routs ON journeys.rout_id = routs.id
 	LEFT JOIN stations ON routs.start_station_id = stations.id
 	LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
+	LEFT JOIN types_journey ON journeys.type_journey = types_journey.id
+	LEFT JOIN types_train ON journeys.type_train = types_train.id
     WHERE  hours - 1 <= TIMESTAMPDIFF(HOUR,journeys.departure_time,journeys.arrival_time) 
     and TIMESTAMPDIFF(HOUR,journeys.departure_time,journeys.arrival_time) <= hours + 1 ;
     
@@ -784,21 +789,24 @@ DELIMITER //
 CREATE PROCEDURE journeys_count_of_price_rout (IN price INT, OUT count_routs INT)
 BEGIN 
 	SELECT routs.id AS 'Номер рейсу',
-		stations.title AS 'Початкова станція',
-        stations2.title AS 'Кінцева станція',
-		IF (journeys.canceled,'Так','Ні') AS 'Чи відмінений',
-        delays.title AS 'Причина затримки',
-        IF (journeys.beginning_delay IS NOT NULL,journeys.beginning_delay,'-') AS 'Початок затримки',
-        IF (journeys.end_delay IS NOT NULL, journeys.end_delay,'-') AS 'Кінець затримки',
-        journeys.departure_time AS 'Час відправлення',
-        journeys.arrival_time AS 'Час прибуття',
-        journeys.price_ticket AS 'Ціна за квиток',
-        IF (journeys.international_or_internal, 'Внутрішній','Міжнародний') AS 'Тип рейсу'
+			stations.title AS 'Початкова станція',
+			stations2.title AS 'Кінцева станція',
+			IF (journeys.canceled,'Так','Ні') AS 'Чи відмінений',
+			delays.title AS 'Причина затримки',
+			IF (journeys.beginning_delay IS NOT NULL,journeys.beginning_delay,'-') AS 'Початок затримки',
+			IF (journeys.end_delay IS NOT NULL, journeys.end_delay,'-') AS 'Кінець затримки',
+			journeys.departure_time AS 'Час відправлення',
+			journeys.arrival_time AS 'Час прибуття',
+			journeys.price_ticket AS 'Ціна за квиток',
+			types_journey.title AS 'Тип маршруту',
+			types_train.title AS 'Тип потяга'
 	FROM journeys 
 	LEFT JOIN delays ON journeys.delay_id = delays.id
 	LEFT JOIN routs ON journeys.rout_id = routs.id
 	LEFT JOIN stations ON routs.start_station_id = stations.id
 	LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
+	LEFT JOIN types_journey ON journeys.type_journey = types_journey.id
+	LEFT JOIN types_train ON journeys.type_train = types_train.id
     WHERE  price - 50 <= journeys.price_ticket and journeys.price_ticket <= price + 50 ;
     
     
@@ -824,12 +832,15 @@ BEGIN
 			journeys.departure_time AS 'Час відправлення',
 			journeys.arrival_time AS 'Час прибуття',
 			journeys.price_ticket AS 'Ціна за квиток',
-			IF (journeys.international_or_internal, 'Внутрішній','Міжнародний') AS 'Тип рейсу'
+			types_journey.title AS 'Тип маршруту',
+			types_train.title AS 'Тип потяга'
 	FROM journeys 
 	LEFT JOIN delays ON journeys.delay_id = delays.id
 	LEFT JOIN routs ON journeys.rout_id = routs.id
 	LEFT JOIN stations ON routs.start_station_id = stations.id
 	LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
+	LEFT JOIN types_journey ON journeys.type_journey = types_journey.id
+	LEFT JOIN types_train ON journeys.type_train = types_train.id
     WHERE  journeys.rout_id = rout_id 
     AND hours - 1 <= TIMESTAMPDIFF(HOUR,journeys.departure_time,journeys.arrival_time) 
     AND TIMESTAMPDIFF(HOUR,journeys.departure_time,journeys.arrival_time) <= hours + 1 
@@ -861,12 +872,15 @@ BEGIN
 			journeys.departure_time AS 'Час відправлення',
 			journeys.arrival_time AS 'Час прибуття',
 			journeys.price_ticket AS 'Ціна за квиток',
-			IF (journeys.international_or_internal, 'Внутрішній','Міжнародний') AS 'Тип рейсу'
+			types_journey.title AS 'Тип маршруту',
+			types_train.title AS 'Тип потяга'
 	FROM journeys 
 	LEFT JOIN delays ON journeys.delay_id = delays.id
 	LEFT JOIN routs ON journeys.rout_id = routs.id
 	LEFT JOIN stations ON routs.start_station_id = stations.id
 	LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
+	LEFT JOIN types_journey ON journeys.type_journey = types_journey.id
+	LEFT JOIN types_train ON journeys.type_train = types_train.id
     WHERE journeys.canceled = 1;
     
     
@@ -892,12 +906,15 @@ BEGIN
 			journeys.departure_time AS 'Час відправлення',
 			journeys.arrival_time AS 'Час прибуття',
 			journeys.price_ticket AS 'Ціна за квиток',
-			IF (journeys.international_or_internal, 'Внутрішній','Міжнародний') AS 'Тип рейсу'
+			types_journey.title AS 'Тип маршруту',
+			types_train.title AS 'Тип потяга'
 	FROM journeys 
 	LEFT JOIN delays ON journeys.delay_id = delays.id
 	LEFT JOIN routs ON journeys.rout_id = routs.id
 	LEFT JOIN stations ON routs.start_station_id = stations.id
 	LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
+	LEFT JOIN types_journey ON journeys.type_journey = types_journey.id
+	LEFT JOIN types_train ON journeys.type_train = types_train.id
     WHERE journeys.canceled = 1 AND journeys.rout_id = rout_id;
     
     
@@ -910,7 +927,6 @@ DELIMITER ;
 
 # CALL journeys_count_of_cancelled_journeys_and_rout(3,@count_routs);
 
-# some problems with declare***********************************
 DELIMITER //
 CREATE PROCEDURE journeys_count_of_cancelled_end_station (IN end_station_id1 int, OUT count_routs INT)
 BEGIN 
@@ -924,12 +940,15 @@ BEGIN
 			journeys.departure_time AS 'Час відправлення',
 			journeys.arrival_time AS 'Час прибуття',
 			journeys.price_ticket AS 'Ціна за квиток',
-			IF (journeys.international_or_internal, 'Внутрішній','Міжнародний') AS 'Тип рейсу'
+			types_journey.title AS 'Тип маршруту',
+			types_train.title AS 'Тип потяга'
 	FROM journeys 
 	LEFT JOIN delays ON journeys.delay_id = delays.id
 	LEFT JOIN routs ON journeys.rout_id = routs.id
 	LEFT JOIN stations ON routs.start_station_id = stations.id
 	LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
+	LEFT JOIN types_journey ON journeys.type_journey = types_journey.id
+	LEFT JOIN types_train ON journeys.type_train = types_train.id
     WHERE journeys.canceled = 1 AND routs.end_station_id = end_station_id1;
 
     SELECT COUNT(*) INTO count_routs 
@@ -963,12 +982,15 @@ BEGIN
 			journeys.departure_time AS 'Час відправлення',
 			journeys.arrival_time AS 'Час прибуття',
 			journeys.price_ticket AS 'Ціна за квиток',
-			IF (journeys.international_or_internal, 'Внутрішній','Міжнародний') AS 'Тип рейсу'
+			types_journey.title AS 'Тип маршруту',
+			types_train.title AS 'Тип потяга'
 	FROM journeys 
 	LEFT JOIN delays ON journeys.delay_id = delays.id
 	LEFT JOIN routs ON journeys.rout_id = routs.id
 	LEFT JOIN stations ON routs.start_station_id = stations.id
 	LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
+	LEFT JOIN types_journey ON journeys.type_journey = types_journey.id
+	LEFT JOIN types_train ON journeys.type_train = types_train.id
     WHERE journeys.delay_id = couse_delay;
     
     
@@ -994,16 +1016,19 @@ BEGIN
 			journeys.departure_time AS 'Час відправлення',
 			journeys.arrival_time AS 'Час прибуття',
 			journeys.price_ticket AS 'Ціна за квиток',
-			IF (journeys.international_or_internal, 'Внутрішній','Міжнародний') AS 'Тип рейсу'
+			types_journey.title AS 'Тип маршруту',
+			types_train.title AS 'Тип потяга'
 	FROM journeys 
 	LEFT JOIN delays ON journeys.delay_id = delays.id
 	LEFT JOIN routs ON journeys.rout_id = routs.id
 	LEFT JOIN stations ON routs.start_station_id = stations.id
 	LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
+	LEFT JOIN types_journey ON journeys.type_journey = types_journey.id
+	LEFT JOIN types_train ON journeys.type_train = types_train.id
     WHERE journeys.delay_id = couse_delay AND journeys.rout_id = rout_id;
     
     SELECT COUNT(*) INTO count_routs FROM journeys
-    WHERE tickets.delay_id = couse_delay AND journeys.rout_id = rout_id;
+    WHERE journeys.delay_id = couse_delay AND journeys.rout_id = rout_id;
     
     SELECT count_routs;
 END //
@@ -1026,7 +1051,8 @@ BEGIN
 			IF (tickets.buying_time IS NOT NULL,tickets.buying_time, '-') AS 'Час купівлі',
 			IF (tickets.return_time IS NOT NULL,tickets.return_time, '-') AS 'Час повернення',
 			tickets.sex AS 'Стать',
-			tickets.age AS 'Вік'
+			tickets.age AS 'Вік',
+            IF (tickets.handed_luggage,'Так','Ні') AS 'Зданий багаж'
 	FROM tickets
 	LEFT JOIN journeys ON journeys.rout_id = tickets.journey_id
 	LEFT JOIN routs ON tickets.journey_id = routs.id
@@ -1067,7 +1093,8 @@ BEGIN
 			IF (tickets.buying_time IS NOT NULL,tickets.buying_time, '-') AS 'Час купівлі',
 			IF (tickets.return_time IS NOT NULL,tickets.return_time, '-') AS 'Час повернення',
 			tickets.sex AS 'Стать',
-			tickets.age AS 'Вік'
+			tickets.age AS 'Вік',
+            IF (tickets.handed_luggage,'Так','Ні') AS 'Зданий багаж'
 	FROM tickets
 	LEFT JOIN journeys ON journeys.rout_id = tickets.journey_id
 	LEFT JOIN routs ON tickets.journey_id = routs.id
@@ -1089,7 +1116,7 @@ BEGIN
 END //
 DELIMITER ;
 
-# CALL tickets_average_selled_in_period_of_time_on_some_rout(1,'2020-03-10 12:45:30','2020-03-10 19:45:30',@count_delays);
+# CALL tickets_average_sold_in_period_of_time_on_some_rout(1,'2020-03-10 12:45:30','2020-03-10 19:45:30',@count_delays);
 
  DELIMITER //
 CREATE PROCEDURE tickets_average_sold_in_period_of_hour_on_some (IN rout_id INT, IN begining_period DATETIME, IN end_period DATETIME, IN hours INT, OUT count_tickets INT)
@@ -1106,7 +1133,8 @@ BEGIN
 			IF (tickets.buying_time IS NOT NULL,tickets.buying_time, '-') AS 'Час купівлі',
 			IF (tickets.return_time IS NOT NULL,tickets.return_time, '-') AS 'Час повернення',
 			tickets.sex AS 'Стать',
-			tickets.age AS 'Вік'
+			tickets.age AS 'Вік',
+            IF (tickets.handed_luggage,'Так','Ні') AS 'Зданий багаж'
 	FROM tickets
 	LEFT JOIN journeys ON journeys.rout_id = tickets.journey_id
 	LEFT JOIN routs ON tickets.journey_id = routs.id
@@ -1152,7 +1180,8 @@ BEGIN
 			IF (tickets.buying_time IS NOT NULL,tickets.buying_time, '-') AS 'Час купівлі',
 			IF (tickets.return_time IS NOT NULL,tickets.return_time, '-') AS 'Час повернення',
 			tickets.sex AS 'Стать',
-			tickets.age AS 'Вік'
+			tickets.age AS 'Вік',
+            IF (tickets.handed_luggage,'Так','Ні') AS 'Зданий багаж'
 	FROM tickets
 	LEFT JOIN journeys ON journeys.rout_id = tickets.journey_id
 	LEFT JOIN routs ON tickets.journey_id = routs.id
@@ -1181,3 +1210,4 @@ END //
 DELIMITER ;
 
 # CALL tickets_average_sold_price_of_ticket_rout (1,'2020-03-10 12:45:30','2020-03-10 19:45:30',500,@COUNT_OF_BUY_TICKETS);
+

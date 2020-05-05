@@ -58,12 +58,15 @@ SELECT routs.id AS 'Номер рейсу',
         journeys.departure_time AS 'Час відправлення',
         journeys.arrival_time AS 'Час прибуття',
         journeys.price_ticket AS 'Ціна за квиток',
-        IF (journeys.international_or_internal, 'Внутрішній','Міжнародний') AS 'Тип рейсу'
+        types_journey.title AS 'Тип маршруту',
+        types_train.title AS 'Тип потяга'
 FROM journeys 
 LEFT JOIN delays ON journeys.delay_id = delays.id
 LEFT JOIN routs ON journeys.rout_id = routs.id
 LEFT JOIN stations ON routs.start_station_id = stations.id
-LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id;
+LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id
+LEFT JOIN types_journey ON journeys.type_journey = types_journey.id
+LEFT JOIN types_train ON journeys.type_train = types_train.id;
 
 CREATE VIEW tickets_view AS
 SELECT tickets.id,
@@ -78,7 +81,8 @@ SELECT tickets.id,
 		IF (tickets.buying_time IS NOT NULL,tickets.buying_time, '-') AS 'Час купівлі',
 		IF (tickets.return_time IS NOT NULL,tickets.return_time, '-') AS 'Час повернення',
 		tickets.sex AS 'Стать',
-		tickets.age AS 'Вік'
+		tickets.age AS 'Вік',
+        IF (tickets.handed_luggage,'Так','Ні') AS 'Зданий багаж'
 FROM tickets
 LEFT JOIN journeys ON journeys.rout_id = tickets.journey_id
 LEFT JOIN routs ON tickets.journey_id = routs.id
