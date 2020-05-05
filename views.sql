@@ -84,8 +84,8 @@ SELECT tickets.id,
 		tickets.age AS 'Вік',
         IF (tickets.handed_luggage,'Так','Ні') AS 'Зданий багаж'
 FROM tickets
-LEFT JOIN journeys ON journeys.rout_id = tickets.journey_id
-LEFT JOIN routs ON tickets.journey_id = routs.id
+LEFT JOIN journeys ON journeys.id = tickets.journey_id
+LEFT JOIN routs ON routs.id = journeys.rout_id
 LEFT JOIN stations ON routs.start_station_id = stations.id
 LEFT JOIN stations stations2 ON routs.end_station_id = stations2.id;
 
