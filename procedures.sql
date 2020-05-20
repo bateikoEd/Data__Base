@@ -62,7 +62,7 @@ BEGIN
 END //
 DELIMITER ;
 
-# CALL employees_all_and_count(@count_employees);
+CALL employees_all_and_count(@count_employees);
 
 DELIMITER // 
 CREATE PROCEDURE employees_rang_and_count(IN rang_id INT, OUT count_employees INT)

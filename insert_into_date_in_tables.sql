@@ -228,7 +228,8 @@ INSERT INTO employees (full_name,rang_id,department_id,team_id,count_of_children
             ('Ткаченко Олександр Владиславович', 2, 2,1, 3, 'Чоловік',2000,FALSE,25,5),
             ('Беленюк Жан Венсанович', 3, 2,1, 0, 'Чоловік',2000,TRUE,20,1),
             ('Бабак Сергій Віталійович', 4, 2,2, 0, 'Чоловік',2000,FALSE,30,5),
-            ('Шуляк Олена Олексіївна', 5, 2,3, 2, 'Жінка',20000,TRUE,30,6);
+            ('Шуляк Олена Олексіївна', 5, 2,3, 2, 'Жінка',20000,TRUE,30,6),
+            ('Порошенко Петро Олексійович', 1, 3,0, 4, 'Чоловік',200000,TRUE,50,25);
 
 INSERT INTO locomotives (count_of_completed_routes,main_station_id,current_station_id,arival_time,
 		last_techical_overview,last_repair,repairs_count,locomotiv_age,locomotive_team_department_id,
